@@ -1,0 +1,120 @@
+Fuzz Tone
+
+.include fuzztone.mod
+
+* calculate bias at minimum attack
+.param att=0.01
+.param vol=0.99
+
+* original values from patent
+.param r19=10k
+.param r29=2.2k
+.param r33=10k
+
+X1 in out fuzztone att=att vol=vol r19=r19 r29=r29 r33=r33
+
+.param amp=1
+
+Vin in 0 sin(0 {amp} 440 0 0)
+
+.control
+
+let start_r19 = 1k
+let stop_r19 = 20k
+let delta_r19 = 1k
+let r19_act = start_r19
+
+let targ_v2 = -1.5
+let best_v2 = 100
+let best_v2err = 100
+let best_r19 = r19_act
+
+let start_r29 = 100
+let stop_r29 = 10k
+let delta_r29 = 100
+let r29_act = start_r29
+
+let targ_v7 = -3
+let best_v7 = 100
+let best_v7err = 100
+let best_r29 = r29_act
+
+let start_r33 = 1k
+let stop_r33 = 20k
+let delta_r33 = 1k
+let r33_act = start_r33
+
+let targ_v9 = -2.5
+let best_v9 = 100
+let best_v9err = 100
+let best_r33 = r33_act
+
+
+* loop
+while r19_act < stop_r19
+
+alterparam r19 = $&r19_act
+reset
+op
+
+let v2err = abs(v(x1.2)-targ_v2)
+if v2err le best_v2err
+let best_v2 = v(x1.2)
+let best_v2err = v2err
+let best_r19 = r19_act
+end
+
+let r19_act = r19_act + delta_r19
+end
+
+
+* loop
+while r29_act < stop_r29
+
+alterparam r29 = $&r29_act
+reset
+op
+
+let v7err = abs(v(x1.7)-targ_v7)
+if v7err le best_v7err
+let best_v7 = v(x1.7)
+let best_v7err = v7err
+let best_r29 = r29_act
+end
+
+let r29_act = r29_act + delta_r29
+end
+
+
+* loop
+while r33_act < stop_r33
+
+alterparam r19 = $&best_r19
+alterparam r33 = $&r33_act
+reset
+op
+
+let v9err = abs(v(x1.9)-targ_v9)
+if v9err le best_v9err
+let best_v9 = v(x1.9)
+let best_v9err = v9err
+let best_r33 = r33_act
+end
+
+let r33_act = r33_act + delta_r33
+end
+
+
+print best_r19 best_v2
+print best_r29 best_v7
+print best_r33 best_v9
+
+alterparam r19 = $&best_r19
+alterparam r29 = $&best_r29
+alterparam r33 = $&best_r33
+reset
+tran 22.675u 0.009
+
+.endc
+
+.end

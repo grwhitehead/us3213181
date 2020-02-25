@@ -1,0 +1,23 @@
+Fuzz Tone
+
+.include fuzztone.mod
+
+.param att=0.01
+.param vol=0.99
+
+X1 in out fuzztone att=att vol=vol
+
+.model filesrc filesource (file="riff" amploffset=[0] amplscale=[1]
++                          timeoffset=0 timescale=1
++                          timerelative=false amplstep=false)
+
+a1 %vd([in 0]) filesrc
+
+.control
+save v(out)
+* 44100Hz sampling frequency, 5 sec audio clip
+tran 22.675u 5
+wrdata riff-fuzztone-att_0.01 v(out)
+.endc
+
+.end

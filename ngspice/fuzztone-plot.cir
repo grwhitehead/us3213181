@@ -1,0 +1,101 @@
+Fuzz Tone
+
+.include fuzztone.mod
+
+.param att=0.99
+.param vol=0.99
+
+X1 in out fuzztone att=att vol=vol
+
+.param amp=1
+.param frq=440
+
+Vin in 0 sin(0 {amp} {frq} 0 0)
+
+.control
+foreach frqi 110
+  foreach ampi 0.14 0.28 0.56
+    foreach atti 0.01 0.99
+
+alterparam frq=$frqi
+alterparam amp=$ampi
+alterparam att=$atti
+
+reset
+* 44100Hz sampling frequency, capture 4 cycles of 110Hz input signal
+tran 22.675u 0.136 0.100
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-input v(in)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-output v(out)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-a v(x1.5)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-b v(x1.8)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-c v(x1.9)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-d v(out)
+
+    end
+  end
+end
+
+foreach frqi 220
+  foreach ampi 0.14 0.28 0.56
+    foreach atti 0.01 0.99
+
+alterparam frq=$frqi
+alterparam amp=$ampi
+alterparam att=$atti
+
+reset
+* 44100Hz sampling frequency, capture 4 cycles of 220Hz input signal
+tran 22.675u 0.118 0.100
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-input v(in)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-output v(out)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-a v(x1.5)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-b v(x1.8)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-c v(x1.9)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-d v(out)
+
+    end
+  end
+end
+
+foreach frqi 440
+  foreach ampi 0.14 0.28 0.56
+    foreach atti 0.01 0.99
+
+alterparam frq=$frqi
+alterparam amp=$ampi
+alterparam att=$atti
+
+reset
+* 44100Hz sampling frequency, capture 4 cycles of 440Hz input signal
+tran 22.675u 0.109 0.100
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-input v(in)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-output v(out)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-a v(x1.5)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-b v(x1.8)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-c v(x1.9)
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-d v(out)
+
+    end
+  end
+end
+
+foreach frqi 110 220 440
+  foreach ampi 0.14
+    foreach atti 0.01 0.10 0.99
+
+alterparam frq=$frqi
+alterparam amp=$ampi
+alterparam att=$atti
+
+reset
+save v(out)
+* 44100Hz sampling frequency, 1 sec audio clip
+tran 22.675u 1
+wrdata sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti} v(out)
+
+    end
+  end
+end
+.endc
+
+.end

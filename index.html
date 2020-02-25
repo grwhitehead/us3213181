@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+    <title>us3213181</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Custom styles for this site -->
+    <link href="/css/site.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+    <div class="container">
+
+      <div class="jumbotron">
+        <h1>US Patent #3,213,181 Simulation</h1>
+        <p>
+          Transistor-level simulation of Glen Snoddy's <a href="references/US3213181.pdf" target="_blank">US Patent #3,213,181</a> fuzz circuit, released by Gibson in 1962 as the <a href="https://en.wikipedia.org/wiki/Maestro_FZ-1_Fuzz-Tone" target="_blank">Maestro Fuzz Tone FZ-1</a>.
+        </p>
+        <p>
+          Repository: <a href="https://github.com/grwhitehead/us3213181">https://github.com/grwhitehead/us3213181</a>
+        </p>
+      </div>
+
+      <a href="references/US3213181.pdf"><img class="img-responsive" src="references/US3213181-drawings-page-1-cropped.png" alt="US Patent #3,213,181"></a>
+
+      <p>
+        Glen Snoddy's <a href="references/US3213181.pdf" target="_blank">US Patent #3,213,181</a> documents the fuzz circuit released by Gibson in 1962 as the <a href="https://en.wikipedia.org/wiki/Maestro_FZ-1_Fuzz-Tone" target="_blank">Maestro Fuzz Tone FZ-1</a>. Designed to reproduce the sound of a faulty amplifier, it is the inspiration for many subsequent fuzz circuits, including the Tone Bender and the Fuzz Face.
+        The Maestro Fuzz Tone was used by the Rolling Stones on <a href="https://en.wikipedia.org/wiki/(I_Can%27t_Get_No)_Satisfaction" target="_blank">Satisfaction</a> in 1965.
+      </p>
+      <p>
+        This is a transistor-level simulation of the circuit that runs in ngspice and can process recorded audio samples to generate simulated output:
+      </p>
+      <ul>
+        <li> riff (max attack)<br/>
+          <audio controls="">
+            <source src="audio/riff-amp_0.28-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (min attack)<br/>
+          <audio controls="">
+            <source src="audio/riff-amp_0.28-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (dry)<br/>
+          <audio controls="">
+            <source src="audio/riff.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+      </ul>
+
+      <hr>
+      <p>
+        Table of Contents
+      </p>
+      <ol>
+        <li><a href="#circuit">The Circuit</a>
+        <li><a href="#plots">Plots</a>
+        <li><a href="#audio">Audio</a>
+        <li><a href="#running">Running the Simulation</a>
+      </ol>
+      <hr>
+
+      <a id="circuit"></a>
+      <h2>The Circuit</h2>
+
+      <p>
+        The patent provides component values known to work with 0.1 vrms input signal:
+      </p>
+
+      <blockquote>
+The circuit and components of the modifier circuit and by-pass are shown in FIG. 2. The circuit from the coil 4 is grounded at 13 and fed into an impedance transforming or load balancing circuit through the resistor 14 and condenser 15 to the base or control terminal of a transistor 16. The emitter 17 of the transistor is connected to ground at 18 through the load resistor 19. A parallel resistor 20 establishes the impedance of the balancing or load circuit at the desired amount relative to the impedance of the signal generating coil 4. The collector of the transistor is energized from the negative side of the battery 21 through an on-olf switch 22. The switch 22 is ganged with the by-pass control switch 10.
+      </blockquote>
+      <blockquote>
+The tone modulated current or signal passing through the transistor 16 is coupled through the condenser 24 to a first clipping circuit including the transistor 25. The transistor is fed through the voltage dropping resistor 26 from the battery with its emitter 27 connected to ground 18. A 470 ohm resistor 261 reduces the effect of low temperature on the transistors of the circuit. The control terminal or base 28 of the transistor is connected to ground through the series resistors 29 and 30 with the variable resistor 12 connected from ground to between the two series resistors. The variable resistor varies the intensity or magnitude of the voltage applied to the control terminal 28 of the transistor 25 and may be termed an attack control resistor.
+      </blockquote>
+      <p>
+        Note: The 470 ohm value for resistor 261 should probably have been 470 kilohms (that's what is reported to be in actual devices and what's used in this simulation)
+      </p>
+      <blockquote>
+The values of the components of the first clipping circuit are selected so that the transistor 25 is overloaded to clip off or flatten the second or negative peak of the signal developed in the transistor. These may be varied but a practical set of values for a .1 volt input to the balancing circuit are as follows: resistor 14, 100 kilohms; condenser 15, .01 microfarads; resistor 20, 1 megohm; resistor 19, 10 kilohms; condenser 25, 2O microfarads; resistor 29, 2.2 kilohms; resistor 30, 22 kilohms; resistor 30, 0 to 50 kilohms and resistor 26, 1.5 kilohms. With a 3.1 volt battery this provides a minus 1.5 volt bias at the base and the emitter of transistor 16 and minus 3 volt bias at the collector of transistor 25.
+      </blockquote>
+      <p>
+        Note: The second reference to resistor 30 is a typo and should refer to variable resistor 12
+      </p>
+      <blockquote>
+The signal in the collector circuit of transistor 25 is coupled through a 20 microfarad capacitor 31 to a secand clipping circuit and transistor 32 The base of the transistor and the condenser 31 are connected to ground through a 10 kilohm resistor 33. The collector 34 of the transistor is fed through a 10 kilohm resistor 35 and the emitter 36 is connected direct to ground. This second clipper circuit clips or fiattens the leading or positive side of the signal and creates a square wave at point C. with a bias voltage of minus 2.5 volts.
+      </blockquote>
+      <blockquote>
+The second clipper circuit is coupled through a .0033 microfarad condenser 37 to a differentiating circuit consisting of the 56 kilohm resistor 38 and parallel variable resistor 39 which is part of the volume control switch 11. The foot operated switch connects alternatively to the volume control switch 11 or a by-pass conductor 40 to cut out the tone modifying circuit.
+      </blockquote>
+
+      <p>
+        The patent doesn't suggest a specific transistor to use, but we know that the original Maestro Fuzz Tone FZ-1 used RCA 2N270 germanium PNP transistors.
+      </p>
+      <p>
+        The AC128 is an equivalent replacement part for the 2N270 and this simulation uses a SPICE model for the AC128 that is based on parameters extracted from vintage components by Holmes, Holters, and van Walstijn and published in <a href="http://benholmes.co.uk/publication/2017-09-05-Comparison%20of%20Germanium%20BJT%20models" target="_blank">"Comparison of Germanium Bipolar Junction Transistor Models for Real-Time Circuit Simulation”, Proceedings of the 20th International Conference on Digital Audio Effects, Edinburgh, Scotland, Sept. 2017</a>.
+      </p>
+      <p>
+        Three resistor values were adjusted to get the transistor bias voltages specified in the patent:
+      </p>
+      <ul>
+        <li> R19 was adjusted from 10k to 7k to get -1.5v at the base and emitter of Q16.
+        <li> R29 was adjusted from 2.2k to 1.4k to get -3.0v at the collector of Q25
+        <li> R33 was adjusted from 10k to 3k to get -2.5v at the collector of Q32.
+      </ul>
+
+      <p>
+        SPICE subcircuit with parameters for the attack and volume potentiometers, as well as for the biasing resistors:
+      </p>
+      <pre>
+.subckt fuzztone in out att=0.99 vol=0.99 r19=7k r29=1.4k r33=3k
+
+* B. Holmes, M. Holters, M. van Walstijn. “Comparison of Germanium Bipolar Junction Transistor Models for Real-Time Circuit Simulation”, Proceedings of the 20th International Conference on Digital Audio Effects, Edinburgh, Scotland, Sept. 2017
+.MODEL AC128 PNP(IS=20.66u BF=229.6 BR=14.66 NF=1.133 NR=1.140 VT=25.5m VAF=19.68 VAR=88.28 IKF=463.0m IKR=241.5m ISE=2.190u ISC=7.546u NE=1.796 NC=1.364 RB=1.885 RE=306.4m RC=1.727u CCB=100p)
+
+R14 in 1 100k
+C15 1 2 0.01u
+R20 2 0 1meg
+
+Q16 4 2 3 AC128
+
+*R19 3 0 10k
+R19 3 0 {r19}
+C24 3 5 20u
+
+*R261 4 5 470
+R261 4 5 470k
+*R29 5 6 2.2k
+R29 5 6 {r29}
+R30 6 0 22k
+R12 6 0 {att*50k}
+
+Q25 7 5 0 AC128
+
+R26 4 7 1.5k
+C31 7 8 20u
+*R33 8 0 10k
+R33 8 0 {r33}
+
+Q32 9 8 0 AC128
+
+R35 4 9 10k
+C37 9 10 0.0033u
+R38 10 0 56k
+
+R11a 10 out {(1-vol)*100k}
+R11b out 0 {vol*100k}
+
+Vbatt 0 4 DC 3.1
+
+.ends fuzztone
+      </pre>
+
+      <a id="plots"></a>
+      <h2>Plots</h2>
+
+      <p>
+        The patent describes the expected output of the circuit, giving us a way to check the simulation:
+      </p>
+      <blockquote>
+FIGURE 3, 4, 5 and 6 illustrate the wave form of a test signal as applied to and modified by the circuit at points A., B., C and D respectively. The signals illustrated are representative only of the type of variation of signals that will be created by the more complex signal generated by one of the strings 2. The signals further illustrate the action of the circuit with the attack control 12 set at maximum resistance. The simple sine wave signal shown in FIG. 3 will have a peak to peak value of .17 volts as the result of an input signal of .1 volt R.M.S. The amplification and bias of transistor 16 result in the wave being somewhat negative as shown. This is applied at point A to the first clipper circuit that clips the negative side of the wave and creates a signal at point B as shown in FIG. 4 with peak to peak voltage of 1.5 volts. The differentiating circuit including the volume control switch block portions of the square wave produced at point C and shown in FIG. 5 to produce a signal at point D as shown in FIG. 6. This is with the volume switch set for maximum volume. The peak to peak voltage will be 2.4 volts.
+      </blockquote>
+      <p>
+        Circuit simulation waveforms at maximum attack for 0.14v peak (0.1 vrms) 220Hz sinusoidal input:
+      </p>
+      <img class="img-responsive" src="plots/sin_220-amp_0.14-fuzztone-att_0.99-abcd.png">
+
+      <blockquote>
+FIGURES 7, 8, and 9 show the wave patterns developed at points B, C and D with the attack control variable switch 12 set at a minimum or zero value across resistor 30. It will be noted that similar variations in the wave pattern may be created by the musician striking the string 2 strongly or weakly as this will produce a variation in the intensity or magnitude of the input signal developed in the coil 4.
+      </blockquote>
+      <p>
+        Circuit simulation waveforms at minimum attack for 0.14v peak (0.1 vrms) 220Hz sinusoidal input:
+      </p>
+      <img class="img-responsive" src="plots/sin_220-amp_0.14-fuzztone-att_0.01-abcd.png">
+      
+      <p>
+        Increasing the amplitude of the input signal leads to an increase in the effect similar to increasing the attack setting.
+      </p>
+
+      <blockquote>
+It will be noted that similar variations in the wave pattern may be created by the musician striking the string 2 strongly or weakly as this will produce a variation in the intensity or magnitude of the input signal developed in the coil 4.
+      </blockquote>
+      <p>
+        Circuit simulation waveforms at minimum attack for 220Hz sinusoidal input signals of increasing amplitude:
+      </p>
+      <img class="img-responsive" src="plots/sin_220-amps-fuzztone-att_0.01-output.png">
+      <p>
+        Circuit simulation waveforms at maximum attack for 220Hz sinusoidal input signals of increasing amplitude:
+      </p>
+      <img class="img-responsive" src="plots/sin_220-amps-fuzztone-att_0.99-output.png">
+
+      <p>
+        The circuit is designed to generate harmonic distortion.
+      </p>
+      <blockquote>
+It is pointed out that the transistors 16, and 32 are used as amplifying electron valves and that vacuum tubes having control grids and plate-cathode circuits can be substituted if the circuit constants are properly selected to drive the tubes beyond the straight line regulating Voltages of their control grids. The overdriving of the amplifying devices, either transistors or vacuum tubes creates harmonics of the input signal controlling the amplifier. The extent of overdriving can be measured as a percentage of harmonics in the output signal. For best tonal modification it is preferred to drive the transistors or amplifier devices at over 100% harmonic output but for the purpose of defining the scope of the invention a minimum level of 25% harmonics is arbitrarily selected as a value and limit for the characteristics of the circuit that will produce significant tone modification as distinguished from what might be classed as mere distortion. It is further pointed out that the tone modifying circuit is operative to produce controlled tones only when a single string of the instrument is played. Playing two or more strings at the same time produces unpredictable and unpleasant noise. If two or more tones are desired simultaneously, a complete separate system is required for each tone.
+      </blockquote>
+      <p>
+        Spectral power of circuit simulation response at maximum attack to 0.14v peak 220Hz sinusoidal input:
+      </p>
+      <img class="img-responsive" src="plots/sin_220-amp_0.14-fuzztone-att_0.99-spectrum.png">
+      <p>
+        Spectral power of circuit simulation response at minimum attack to 0.14v peak 220Hz sinusoidal input:
+      </p>
+      <img class="img-responsive" src="plots/sin_220-amp_0.14-fuzztone-att_0.01-spectrum.png">
+
+      <a id="audio"></a>
+      <h2>Audio</h2>
+      
+      <p>
+        The Maestro Fuzz Tone was unsuccessfully marketed as a replacement for horns, something that is also mentioned in the patent.
+      </p>
+      <blockquote>
+The pulse signals as shown in FIGURES 6 and 9 when sustained as by the vibration of the string 2 vary in quality or character to simulate the tones of different instruments. For example, the signal of FIG. 6 when amplified and reproduced will simulate the tone of a trumpet while the signal in FIG. 9 will simulate the tone of a bass or tuba. Settings of the controls 11 and 12 in between the maximums cause the tones produced to simulate other instruments such as trombone, saxophone and clarinet.
+      </blockquote>
+      <p>
+        You be the judge.
+      </p>
+      <p>
+        Circuit simulation output for various input frequencies and attack settings:
+      </p>
+      <ul>
+        <li> Sine 110 Hz (max attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_110-amp_0.14-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 110 Hz (mid attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_110-amp_0.14-fuzztone-att_0.10.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 110 Hz (min attack) <-- Tuba?<br/>
+          <audio controls="">
+            <source src="audio/sin_110-amp_0.14-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 220 Hz (max attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_220-amp_0.14-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 220 Hz (mid attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_220-amp_0.14-fuzztone-att_0.10.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 220 Hz (min attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_220-amp_0.14-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 440 Hz (max attack)  <-- Trumpet?<br/>
+          <audio controls="">
+            <source src="audio/sin_440-amp_0.14-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 440 Hz (mid attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_440-amp_0.14-fuzztone-att_0.10.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> Sine 440 Hz (min attack)<br/>
+          <audio controls="">
+            <source src="audio/sin_440-amp_0.14-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+      </ul>
+
+      <p>
+        The Maestro Fuzz Tone found more success after it was used by the Rolling Stones on Satisfaction.
+        Ironically, it was recorded as a placeholder for a horn part, but then never replaced.
+      </p>
+      <p>
+        Circuit simulation output for recorded riff:
+      </p>
+      <ul>
+        <li> riff (max attack)<br/>
+          <audio controls="">
+            <source src="audio/riff-amp_0.28-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (min attack)<br/>
+          <audio controls="">
+            <source src="audio/riff-amp_0.28-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (dry)<br/>
+          <audio controls="">
+            <source src="audio/riff.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+      </ul>
+      
+      <a id="running"></a>
+      <h2>Running the Simulation</h2>
+      
+      <p>
+        The simulation runs on MacOS with
+        <ul>
+          <li> ngspice <a href="http://ngspice.sourceforge.net" target="_blank">http://ngspice.sourceforge.net</a>
+          <li> python3 <a href="https://www.python.org" target="_blank">https://www.python.org</a>
+          <li> spice-audio-tools (with my fixes) <a href="https://github.com/grwhitehead/spice-audio-tools" target="_blank">https://github.com/grwhitehead/spice-audio-tools</a>
+        </ul>
+      </p>
+
+      <pre>
+% cd fuzztone
+
+# calculate bias resistor values
+% ./bias.sh fuzztone
+
+# generate plots
+% ./plot.sh fuzztone
+
+# generate riff audio samples
+% ./riff.sh fuzztone-att_0.01
+% ./riff.sh fuzztone-att_0.99
+      </pre>
+
+      <div class="jumbotron">
+        <p>
+          Copyright (c) 2020 Greg Whitehead
+          <br/>
+          MIT License
+        </p>
+      </div>
+
+    </div>
+ 
+  </body>
+</html>
