@@ -1,4 +1,4 @@
-# US Patent #3,213,181
+# US Patent #3,213,181 Simulation
 
 Transistor-level simulation of Glen Snoddy's [US Patent #3,213,181](references/US3213181.pdf) fuzz circuit, released by Gibson in 1962 as the [Maestro Fuzz Tone FZ-1](https://en.wikipedia.org/wiki/Maestro_FZ-1_Fuzz-Tone).
 
