@@ -5,7 +5,9 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
+mkdir -p data
+
 AMP=0.28
-${SPICE_AUDIO_TOOLS}/wavtospice.py --vrange ${AMP} ../audio/riff.wav riff
+${SPICE_AUDIO_TOOLS}/wavtospice.py --vrange ${AMP} ../audio/riff.wav data/riff
 ngspice -b $1-riff.cir
-${SPICE_AUDIO_TOOLS}/spicetowav.py riff-$1 ../audio/riff-amp_${AMP}-$1.wav
+${SPICE_AUDIO_TOOLS}/spicetowav.py data/riff-$1 ../audio/riff-amp_${AMP}-$1.wav
