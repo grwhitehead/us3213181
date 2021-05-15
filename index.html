@@ -103,6 +103,9 @@ The signal in the collector circuit of transistor 25 is coupled through a 20 mic
       <blockquote>
 The second clipper circuit is coupled through a .0033 microfarad condenser 37 to a differentiating circuit consisting of the 56 kilohm resistor 38 and parallel variable resistor 39 which is part of the volume control switch 11. The foot operated switch connects alternatively to the volume control switch 11 or a by-pass conductor 40 to cut out the tone modifying circuit.
       </blockquote>
+      <p>
+        Note: The value of variable resistor 39, in volume control 11, is unspecified. This simulation uses 500k (based on what is reported to be in actual devices).
+      </p>
 
       <p>
         The patent doesn't suggest a specific transistor to use, but we know that the original Maestro Fuzz Tone FZ-1 used RCA 2N270 germanium PNP transistors.
@@ -161,8 +164,8 @@ R35 4 9 10k
 C37 9 10 0.0033u
 R38 10 0 56k
 
-R11a 10 out {(1-vol)*100k}
-R11b out 0 {vol*100k}
+R11a 10 out {(1-vol)*500k}
+R11b out 0 {vol*500k}
 
 Vbatt 0 4 DC 3.1
 

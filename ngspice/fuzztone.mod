@@ -33,8 +33,8 @@ R35 4 9 10k
 C37 9 10 0.0033u
 R38 10 0 56k
 
-R11a 10 out {(1-vol)*100k}
-R11b out 0 {vol*100k}
+R11a 10 out {(1-vol)*500k}
+R11b out 0 {vol*500k}
 
 Vbatt 0 4 DC 3.1
 
