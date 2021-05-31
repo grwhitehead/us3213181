@@ -35,7 +35,7 @@
       <a href="references/US3213181.pdf"><img class="img-responsive" src="references/US3213181-drawings-page-1-cropped.png" alt="US Patent #3,213,181"></a>
 
       <p>
-        Glen Snoddy's <a href="references/US3213181.pdf" target="_blank">US Patent #3,213,181</a> documents the fuzz circuit released by Gibson in 1962 as the <a href="https://en.wikipedia.org/wiki/Maestro_FZ-1_Fuzz-Tone" target="_blank">Maestro Fuzz Tone FZ-1</a>. Designed to reproduce the sound of a faulty amplifier, it was the inspiration for many subsequent fuzz circuits, including the Tone Bender and the Fuzz Face.
+        Glen Snoddy's <a href="references/US3213181.pdf" target="_blank">US Patent #3,213,181</a> documents the fuzz circuit released by Gibson in 1962 as the <a href="https://en.wikipedia.org/wiki/Maestro_FZ-1_Fuzz-Tone" target="_blank">Maestro Fuzz Tone FZ-1</a>. Designed to reproduce the sound of a faulty recording console, it was the inspiration for many subsequent fuzz circuits, including the Tone Bender and the Fuzz Face.
         The Maestro Fuzz Tone was used by the Rolling Stones on <a href="https://en.wikipedia.org/wiki/(I_Can%27t_Get_No)_Satisfaction" target="_blank">Satisfaction</a> in 1965.
       </p>
       <p>
@@ -79,7 +79,7 @@
       <h2>The Circuit</h2>
 
       <p>
-        The patent provides component values known to work with 0.1 vrms input signal:
+        The patent provides a schematic diagram and a description of the components:
       </p>
 
       <blockquote>
@@ -89,7 +89,7 @@ The circuit and components of the modifier circuit and by-pass are shown in FIG.
 The tone modulated current or signal passing through the transistor 16 is coupled through the condenser 24 to a first clipping circuit including the transistor 25. The transistor is fed through the voltage dropping resistor 26 from the battery with its emitter 27 connected to ground 18. A 470 ohm resistor 261 reduces the effect of low temperature on the transistors of the circuit. The control terminal or base 28 of the transistor is connected to ground through the series resistors 29 and 30 with the variable resistor 12 connected from ground to between the two series resistors. The variable resistor varies the intensity or magnitude of the voltage applied to the control terminal 28 of the transistor 25 and may be termed an attack control resistor.
       </blockquote>
       <p>
-        Note: The 470 ohm value for resistor 261 should probably have been 470 kilohms (that's what is reported to be in actual devices and what's used in this simulation)
+        Note: The 470 ohm value for resistor 261 should probably have been 470 kilohms (that's what is <a href="http://guitar-mod.com/rg_pedal_maestro_repair.html" target="_blank">reported to be in actual devices</a> and what's used in this simulation)
       </p>
       <blockquote>
 The values of the components of the first clipping circuit are selected so that the transistor 25 is overloaded to clip off or flatten the second or negative peak of the signal developed in the transistor. These may be varied but a practical set of values for a .1 volt input to the balancing circuit are as follows: resistor 14, 100 kilohms; condenser 15, .01 microfarads; resistor 20, 1 megohm; resistor 19, 10 kilohms; condenser 25, 2O microfarads; resistor 29, 2.2 kilohms; resistor 30, 22 kilohms; resistor 30, 0 to 50 kilohms and resistor 26, 1.5 kilohms. With a 3.1 volt battery this provides a minus 1.5 volt bias at the base and the emitter of transistor 16 and minus 3 volt bias at the collector of transistor 25.
@@ -104,7 +104,7 @@ The signal in the collector circuit of transistor 25 is coupled through a 20 mic
 The second clipper circuit is coupled through a .0033 microfarad condenser 37 to a differentiating circuit consisting of the 56 kilohm resistor 38 and parallel variable resistor 39 which is part of the volume control switch 11. The foot operated switch connects alternatively to the volume control switch 11 or a by-pass conductor 40 to cut out the tone modifying circuit.
       </blockquote>
       <p>
-        Note: The value of variable resistor 39, in volume control 11, is unspecified. This simulation uses 500k (based on what is reported to be in actual devices).
+        Note: The value of variable resistor 39, in volume control 11, is unspecified. This simulation uses 500k (again, based on what is <a href="http://guitar-mod.com/rg_pedal_maestro_repair.html" target="_blank">reported to be in actual devices</a>).
       </p>
 
       <p>
@@ -176,7 +176,7 @@ Vbatt 0 4 DC 3.1
       <h2>Plots</h2>
 
       <p>
-        The patent describes the expected output of the circuit, giving us a way to check the simulation:
+        The patent describes the expected output of the circuit for a 0.1 vrms input signal, giving us a way to check the simulation:
       </p>
       <blockquote>
 FIGURE 3, 4, 5 and 6 illustrate the wave form of a test signal as applied to and modified by the circuit at points A., B., C and D respectively. The signals illustrated are representative only of the type of variation of signals that will be created by the more complex signal generated by one of the strings 2. The signals further illustrate the action of the circuit with the attack control 12 set at maximum resistance. The simple sine wave signal shown in FIG. 3 will have a peak to peak value of .17 volts as the result of an input signal of .1 volt R.M.S. The amplification and bias of transistor 16 result in the wave being somewhat negative as shown. This is applied at point A to the first clipper circuit that clips the negative side of the wave and creates a signal at point B as shown in FIG. 4 with peak to peak voltage of 1.5 volts. The differentiating circuit including the volume control switch block portions of the square wave produced at point C and shown in FIG. 5 to produce a signal at point D as shown in FIG. 6. This is with the volume switch set for maximum volume. The peak to peak voltage will be 2.4 volts.
@@ -202,11 +202,11 @@ FIGURES 7, 8, and 9 show the wave patterns developed at points B, C and D with t
 It will be noted that similar variations in the wave pattern may be created by the musician striking the string 2 strongly or weakly as this will produce a variation in the intensity or magnitude of the input signal developed in the coil 4.
       </blockquote>
       <p>
-        Circuit simulation waveforms at minimum attack for 220Hz sinusoidal input signals of increasing amplitude:
+        Circuit simulation output waveforms at minimum attack for 220Hz sinusoidal input signals of increasing amplitude:
       </p>
       <img class="img-responsive" src="plots/sin_220-amps-fuzztone-att_0.01-output.png">
       <p>
-        Circuit simulation waveforms at maximum attack for 220Hz sinusoidal input signals of increasing amplitude:
+        Circuit simulation output waveforms at maximum attack for 220Hz sinusoidal input signals of increasing amplitude:
       </p>
       <img class="img-responsive" src="plots/sin_220-amps-fuzztone-att_0.99-output.png">
 
