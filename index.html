@@ -60,9 +60,12 @@
       </ul>
 
       <p>
-        The simulation uses a germanium transistor model based on parameters extracted from vintage components: <a href="https://grwhitehead.github.io/germaniumbjts/">https://grwhitehead.github.io/germaniumbjts/</a>
+        The simulation uses a 2N270 germanium transistor model developed by Gert Willmann based on historical datasheets.
       </p>
-
+      <p>
+        Note: The first version of this project, created before Gert Willmann had developed his 2N270 model, used a AC128 germanium transistor model based on parameters extracted from vintage components by Holmes, Holters, and van Walstijn. See <a href="https://grwhitehead.github.io/germaniumbjts/">https://grwhitehead.github.io/germaniumbjts</a>
+      </p>
+      
       <hr>
       <p>
         Table of Contents
@@ -71,6 +74,7 @@
         <li><a href="#circuit">The Circuit</a>
         <li><a href="#plots">Plots</a>
         <li><a href="#audio">Audio</a>
+        <li><a href="#temp">Temperature Sensitivity</a>
         <li><a href="#running">Running the Simulation</a>
       </ol>
       <hr>
@@ -106,39 +110,62 @@ The second clipper circuit is coupled through a .0033 microfarad condenser 37 to
       <p>
         Note: The value of variable resistor 39, in volume control 11, is unspecified. This simulation uses 500k (again, based on what is <a href="http://guitar-mod.com/rg_pedal_maestro_repair.html" target="_blank">reported to be in actual devices</a>).
       </p>
-
       <p>
         The patent doesn't suggest a specific transistor to use, but we know that the original Maestro Fuzz Tone FZ-1 used RCA 2N270 germanium PNP transistors.
       </p>
+      
       <p>
-        The AC128 is an equivalent replacement part for the 2N270 and this simulation uses a SPICE model for the AC128 that is based on parameters extracted from vintage components by Holmes, Holters, and van Walstijn and published in <a href="http://benholmes.co.uk/publication/2017-09-05-Comparison%20of%20Germanium%20BJT%20models" target="_blank">"Comparison of Germanium Bipolar Junction Transistor Models for Real-Time Circuit Simulation”, Proceedings of the 20th International Conference on Digital Audio Effects, Edinburgh, Scotland, Sept. 2017</a>.
+        This simulation uses a SPICE model for the 2N270 developed by Gert Willmann through a process of optimizing model parameters to match characteristics specified in historical datasheets, including temperature sensitivity (germanium transistors are notoriously temperature sensitive). For more details on Gert's process see this thread on DIYstompboxes, starting with reply #15: <a href="https://www.diystompboxes.com/smfforum/index.php?topic=78932.0" target="_blank">https://www.diystompboxes.com/smfforum/index.php?topic=78932.0</a>
       </p>
+      
       <p>
-        For more details on the AC128 germanium transistor model see: <a href="https://grwhitehead.github.io/germaniumbjts/">https://grwhitehead.github.io/germaniumbjts/</a>
-      </p>
-      <p>
-        Three resistor values were adjusted to get the transistor bias voltages specified in the patent:
+        It was found that a simulation temperature of 20&deg;C minimizes error with respect to the bias voltages specified in the patent (implying that the circuit was measured for the patent at an ambient temperature of 20&deg;C / 68&deg;F):
       </p>
       <ul>
-        <li> R19 was adjusted from 10k to 6.7k to get -1.5v at the base and emitter of Q16.
-        <li> R26 was adjusted from 1.5k to 1.2k to get -3.0v at the collector of Q25
-        <li> R35 was adjusted from 10k to 4.8k to get -2.5v at the collector of Q32.
+        <li> -1.50489v at the emitter of Q16 (-1.5v specified)
+        <li> -3.01516v at the collector of Q25 (-3.0v specified)
+        <li> -2.34510v at the collector of Q32 (-2.5v specified)
+      </ul>
+      
+      <p>
+        Two resistor values can be adjusted to get closer to the specified bias voltages, at a simulation temperature of 20&deg;C, but this results in no significant performance improvement (so the original component values are used in this simulation):
+      </p>
+      <ul>
+        <li> R26 can be adjusted from 1.5k to 1.8k to get -3.0v at the collector of Q25
+        <li> R35 can be adjusted from 10k to 7.9k to get -2.5v at the collector of Q32
       </ul>
 
       <p>
         SPICE subcircuit with parameters for the attack and volume potentiometers, as well as for the biasing resistors:
       </p>
       <pre>
-.subckt fuzztone in out att=0.99 vol=0.99 r19=6.7k r26=1.2k r35=4.8k
+.subckt fuzztone in out att=0.99 vol=0.99 r19=10k r26=1.5k r35=10k
 
-* B. Holmes, M. Holters, M. van Walstijn. “Comparison of Germanium Bipolar Junction Transistor Models for Real-Time Circuit Simulation”, Proceedings of the 20th International Conference on Digital Audio Effects, Edinburgh, Scotland, Sept. 2017
-.MODEL AC128 PNP(IS=20.66u BF=229.6 BR=14.66 NF=1.133 NR=1.140 VT=25.5m VAF=19.68 VAR=88.28 IKF=463.0m IKR=241.5m ISE=2.190u ISC=7.546u NE=1.796 NC=1.364 RB=1.885 RE=306.4m RC=1.727u CCB=100p)
+* calculated bias adjustments for 20C (no significant performance improvement)
+*.subckt fuzztone in out att=0.99 vol=0.99 r19=10k r26=1.8k r35=7.9k
+
+*-------------------------------------------------
+*  2N270 Spice model
+*  Germanium PNP transistor in TO-7 metal case
+*  Copyright (c) 2021 by Gert Willmann
+*-------------------------------------------------
+.model 2N270 pnp (
++  is=24.3u
++  bf=172 nf=1.055 vaf=25 ikf=0.143 ise=2.57u ne=1.99
++  br=17.2 nr=1.055 var=25 ikr=0.143 isc=8.35u nc=1.7
++  rc=0.843 re=0.172 rb=294 rbm=16.9 irb=0.904m
++  cje=110p vje=0.3 mje=0.5
++  cjc=183p vjc=0.3 mjc=0.5
++  tf=156n tr=1560n
++  eg=0.67 xti=9.32 xtb=1.5 fc=0.5
++  kf=6.9f af=1
++  tnom=25 )
 
 R14 in 1 100k
 C15 1 2 0.01u
 R20 2 0 1meg
 
-Q16 4 2 3 AC128
+Q16 4 2 3 2N270
 
 *R19 3 0 10k
 R19 3 0 {r19}
@@ -150,14 +177,14 @@ R29 5 6 2.2k
 R30 6 0 22k
 R12 6 0 {att*50k}
 
-Q25 7 5 0 AC128
+Q25 7 5 0 2N270
 
 *R26 4 7 1.5k
 R26 4 7 {r26}
 C31 7 8 20u
 R33 8 0 10k
 
-Q32 9 8 0 AC128
+Q32 9 8 0 2N270
 
 *R35 4 9 10k
 R35 4 9 {r35}
@@ -171,7 +198,7 @@ Vbatt 0 4 DC 3.1
 
 .ends fuzztone
       </pre>
-
+      
       <a id="plots"></a>
       <h2>Plots</h2>
 
@@ -313,6 +340,83 @@ The pulse signals as shown in FIGURES 6 and 9 when sustained as by the vibration
           </audio>
       </ul>
       
+      <a id="temp"></a>
+      <h2>Temperature Sensitivity</h2>
+
+      <p>
+        All of the above simulations were run at 20&deg;C.
+        At lower temperatures the simulation behaves as if the attack setting has been decreased, and at higher temperatures it behaves as if the attack setting has been increased.
+      </p>
+      
+      <p>
+        Circuit simulation output waveforms at minimum attack for 220Hz sinusoidal input with varying simulation temperatures (&deg;C):
+      </p>
+      <img class="img-responsive" src="plots/temps-sin_220-amp_0.14-fuzztone-att_0.01-output.png">
+      <ul>
+        <li> riff (min attack at 10&deg;C / 50&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_10-riff-amp_0.28-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (min attack at 20&deg;C / 68&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_20-riff-amp_0.28-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (min attack at 30&deg;C / 86&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_30-riff-amp_0.28-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+      </ul>
+          
+      <p>
+        Circuit simulation output waveforms at maximum attack for 220Hz sinusoidal input with varying simulation temperatures (&deg;C):
+      </p>
+      <img class="img-responsive" src="plots/temps-sin_220-amp_0.14-fuzztone-att_0.99-output.png">
+      <ul>
+        <li> riff (max attack at 10&deg;C / 50&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_10-riff-amp_0.28-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (max attack at 20&deg;C / 68&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_20-riff-amp_0.28-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (max attack at 30&deg;C / 86&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_30-riff-amp_0.28-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+      </ul>
+
+      <p>
+        At a simulation temperature of 40&deg;C / 104&deg;F the circuit completely breaks down.
+      </p>
+      
+      <p>
+        Circuit simulation waveforms at minimum attack for 0.14v peak (0.1 vrms) 220Hz sinusoidal input at 40&deg;C:
+      </p>
+      <img class="img-responsive" src="plots/temp_40-sin_220-amp_0.14-fuzztone-att_0.01-abcd.png">
+      <p>
+        Circuit simulation waveforms at maximum attack for 0.14v peak (0.1 vrms) 220Hz sinusoidal input at 40&deg;C:
+      </p>
+      <img class="img-responsive" src="plots/temp_40-sin_220-amp_0.14-fuzztone-att_0.99-abcd.png">
+      <ul>
+        <li> riff (min attack at 40&deg;C / 104&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_40-riff-amp_0.28-fuzztone-att_0.01.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        <li> riff (max attack at 40&deg;C / 104&deg;F)<br/>
+          <audio controls="">
+            <source src="audio/temp_40-riff-amp_0.28-fuzztone-att_0.99.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+      </ul>
+
       <a id="running"></a>
       <h2>Running the Simulation</h2>
       
@@ -328,6 +432,9 @@ The pulse signals as shown in FIGURES 6 and 9 when sustained as by the vibration
       <pre>
 % cd fuzztone
 
+# calculate bias temperature
+% ./biastemp.sh fuzztone
+
 # calculate bias resistor values
 % ./bias.sh fuzztone
 
@@ -337,6 +444,13 @@ The pulse signals as shown in FIGURES 6 and 9 when sustained as by the vibration
 # generate riff audio samples
 % ./riff.sh fuzztone-att_0.01
 % ./riff.sh fuzztone-att_0.99
+
+# generate plots at various temperatures
+% ./plot-temps.sh fuzztone
+
+# generate riff audio samples at various temperatures
+% ./riff-temps.sh fuzztone-att_0.01
+% ./riff-temps.sh fuzztone-att_0.99
       </pre>
 
       <div class="jumbotron">

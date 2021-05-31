@@ -11,6 +11,7 @@ plt.title('Fuzz Tone Output')
 plt.xlabel('Time [s]')
 plt.ylabel('Voltage [V]')
 plt.grid()
+plt.ylim([-3.5,3.5])
 
 legend = []
 for fname in sys.argv[2:]:

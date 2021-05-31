@@ -1,0 +1,43 @@
+Fuzz Tone
+
+.include fuzztone.mod
+
+.temp 20
+
+.param att=0.99
+.param vol=0.99
+
+X1 in out fuzztone att=att vol=vol
+
+.param amp=1
+.param frq=440
+
+Vin in 0 sin(0 {amp} {frq} 0 0)
+
+.control
+foreach atti 0.01 0.99
+  alterparam att=$atti
+  foreach ampi 0.14 0.28 0.56
+    alterparam amp=$ampi
+    foreach frqi 220
+      alterparam frq=$frqi
+      foreach tempi 10 20 30 40
+
+reset
+option temp=$tempi
+* 44100Hz sampling frequency, capture 4 cycles of 220Hz input signal
+tran 22.675u 0.118 0.100
+wrdata data/temp_{$tempi}-sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-input v(in)
+wrdata data/temp_{$tempi}-sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-output v(out)
+wrdata data/temp_{$tempi}-sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-a v(x1.5)
+wrdata data/temp_{$tempi}-sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-b v(x1.8)
+wrdata data/temp_{$tempi}-sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-c v(x1.9)
+wrdata data/temp_{$tempi}-sin_{$frqi}-amp_{$ampi}-fuzztone-att_{$atti}-d v(out)
+
+      end
+    end
+  end
+end
+.endc
+
+.end

@@ -1,0 +1,72 @@
+Fuzz Tone
+
+.include fuzztone.mod
+
+* calculate bias at minimum attack
+.param att=0.01
+.param vol=0.99
+
+* original values from patent
+.param r19=10k
+.param r26=1.5k
+.param r35=10k
+
+X1 in out fuzztone att=att vol=vol r19=r19 r26=r26 r35=r35
+
+.param amp=1
+
+Vin in 0 sin(0 {amp} 440 0 0)
+
+.control
+
+let targ_v2 = -1.5
+let best_v2 = 100
+let targ_v7 = -3
+let best_v7 = 100
+let targ_v9 = -2.5
+let best_v9 = 100
+let best_err2 = 100
+
+
+let start_temp = 15
+let stop_temp = 35
+let delta_temp = 1
+let temp_act = start_temp
+let best_temp = 20
+
+
+* loop
+while temp_act < stop_temp
+
+option temp = $&temp_act
+op
+
+let err2 = (v(x1.2)-targ_v2)*(v(x1.2)-targ_v2)+(v(x1.7)-targ_v7)*(v(x1.7)-targ_v7)+(v(x1.9)-targ_v9)*(v(x1.9)-targ_v9)
+if err2 le best_err2
+let best_err2 = err2
+let best_temp = temp_act
+end
+
+let temp_act = temp_act + delta_temp
+end
+
+
+print best_temp
+
+
+option temp = $&best_temp
+op
+
+let best_v2 = v(x1.2)
+let best_v7 = v(x1.7)
+let best_v9 = v(x1.9)
+
+tran 22.675u 0.009
+
+print targ_v2 best_v2
+print targ_v7 best_v7
+print targ_v9 best_v9
+
+.endc
+
+.end

@@ -2,6 +2,8 @@ Fuzz Tone
 
 .include fuzztone.mod
 
+.temp 20
+
 .param att=0.99
 .param vol=0.99
 
