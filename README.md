@@ -4,6 +4,6 @@ Transistor-level simulation of Glen Snoddy's [US Patent #3,213,181](references/U
 
 More at [https://grwhitehead.github.io/us3213181](https://grwhitehead.github.io/us3213181)
 
-Copyright (c) 2020 Greg Whitehead
+Copyright (c) 2020-2021 Greg Whitehead
 
 MIT License
