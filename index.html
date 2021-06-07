@@ -122,17 +122,17 @@ The second clipper circuit is coupled through a .0033 microfarad condenser 37 to
         It was found that a simulation temperature of 20&deg;C minimizes error with respect to the bias voltages specified in the patent (implying that the circuit was measured for the patent at an ambient temperature of 20&deg;C / 68&deg;F):
       </p>
       <ul>
-        <li> -1.5V at the base of Q16 (-1.5V specified)
-        <li> -3.0V at the collector of Q25 (-3.0V specified)
-        <li> -2.3V at the collector of Q32 (-2.5V specified)
+        <li> -1.50V at the base of Q16 (-1.5V specified)
+        <li> -3.02V at the collector of Q25 (-3.0V specified)
+        <li> -2.35V at the collector of Q32 (-2.5V specified)
       </ul>
       
       <p>
         Two resistor values can be adjusted to get closer to the specified bias voltages, at a simulation temperature of 20&deg;C, but this results in no significant performance improvement (so the original component values are used in this simulation):
       </p>
       <ul>
-        <li> R26 can be adjusted from 1.5k to 1.8k to get -3.0V at the collector of Q25
-        <li> R35 can be adjusted from 10k to 7.9k to get -2.5V at the collector of Q32
+        <li> R26 can be adjusted from 1.5k to 1.8k to get -3.00V at the collector of Q25
+        <li> R35 can be adjusted from 10k to 7.9k to get -2.50V at the collector of Q32
       </ul>
       <p>
         Note: Bias simulations were done at minimum attack and maximum volume.
