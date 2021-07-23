@@ -12,12 +12,12 @@
 +  is=24.3u
 +  bf=172 nf=1.055 vaf=25 ikf=0.143 ise=2.57u ne=1.99
 +  br=17.2 nr=1.055 var=25 ikr=0.143 isc=8.35u nc=1.7
-+  rc=0.843 re=0.172 rb=294 rbm=16.9 irb=0.904m
++  rc=0.843 re=0.172 rb=308 rbm=26.8 irb=0.686m
 +  cje=110p vje=0.3 mje=0.5
 +  cjc=183p vjc=0.3 mjc=0.5
 +  tf=156n tr=1560n
 +  eg=0.67 xti=9.32 xtb=1.5 fc=0.5
-+  kf=6.9f af=1
++  kf=6.6f af=1
 +  tnom=25 )
 
 R14 in 1 100k
